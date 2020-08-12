@@ -6,8 +6,8 @@ const productSchema = new Schema(
     name: String,
     price: Number,
     stock: Number,
-    departaments: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Departament" },
+    departments: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
     ],
   },
   { versionKey: false }

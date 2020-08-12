@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Department } from '../interface/department';
 import { DepartmentService } from '../service/department.service';
 
@@ -12,6 +14,7 @@ export class DepartmentComponent implements OnInit {
   depName: string = '';
   departments: Department[] = [];
   onEdit: Department = null;
+  private unSubscribe$: Subject<any> = new Subject();
 
   constructor(
     private departmentService: DepartmentService,
@@ -19,9 +22,12 @@ export class DepartmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.departmentService.get().subscribe((deps) => {
-      this.departments = deps;
-    });
+    this.departmentService
+      .get()
+      .pipe(takeUntil(this.unSubscribe$))
+      .subscribe((deps) => {
+        this.departments = deps;
+      });
   }
 
   save() {
@@ -74,5 +80,9 @@ export class DepartmentComponent implements OnInit {
 
   info(msg: string) {
     this.snackBar.open(msg, 'OK', { duration: 3000 });
+  }
+
+  ngOnDestroy() {
+    this.unSubscribe$.next();
   }
 }

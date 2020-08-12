@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const departamentController = require("./departamentController");
+const productController = require("./productController");
 
 const app = express();
 
@@ -17,7 +18,7 @@ mongoose.connect(
 );
 
 app.use("/departments", departamentController);
-// app.use("/products", productController);
+app.use("/products", productController);
 
 app.listen(3000, () => {
   console.log("RUNNING");

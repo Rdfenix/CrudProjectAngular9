@@ -24,10 +24,28 @@ router.get("/", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const { id } = req?.params;
+  const { id } = req.params;
   Departament.deleteOne({ _id: id }, (err) => {
     if (err) res.status(500).send(err);
     else res.status(200).send({});
+  });
+});
+
+router.patch("/:id", (req, res) => {
+  const { id } = req.params;
+  Departament.findById(id, (err, dep) => {
+    if (err) {
+      res.status(500).send(err);
+    } else if (!dep) {
+      res.status(400).send({});
+    } else {
+      const { name } = req.body;
+      dep.name = name;
+      dep
+        .save()
+        .then((dep) => res.status(200).send(dep))
+        .catch((err) => res.status(500).send(err));
+    }
   });
 });
 

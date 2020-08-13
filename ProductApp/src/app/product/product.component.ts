@@ -45,6 +45,10 @@ export class ProductComponent implements OnInit {
 
   save() {}
 
+  delete(){}
+
+  edit(){}
+
   ngOnDestroy() {
     this.unsubscribe$.next();
   }

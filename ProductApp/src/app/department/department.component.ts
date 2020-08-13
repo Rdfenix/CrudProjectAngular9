@@ -50,7 +50,6 @@ export class DepartmentComponent implements OnInit {
       this.departmentService.add({ name: this.depName }).subscribe(
         (dep) => {
           console.log(dep);
-          this.clearField();
           this.info('Inserted');
         },
         (err) => {
@@ -58,6 +57,7 @@ export class DepartmentComponent implements OnInit {
         }
       );
     }
+    this.clearField();
   }
 
   clearField() {
@@ -76,7 +76,7 @@ export class DepartmentComponent implements OnInit {
   delete(dep: Department) {
     this.departmentService.delete(dep).subscribe(
       () => this.info('Removed'),
-      (err) => console.log(err)
+      (err) => this.info(err.error.error)
     );
   }
 

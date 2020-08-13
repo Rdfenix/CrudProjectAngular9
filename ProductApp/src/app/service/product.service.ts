@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { Product } from '../interface/product';
 import { Department } from '../interface/department';
 import { DepartmentService } from './department.service';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +29,10 @@ export class ProductService {
         this.http.get<Product[]>(this.url)
       )
         .pipe(
+          filter(
+            ([departments, products]) =>
+              departments != null && products !== null
+          ),
           map(([departments, products]) => {
             for (let prod of products) {
               let ids = prod.departments as string[];

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from './../service/product.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { Product } from '../interface/product';
 import { DepartmentService } from '../service/department.service';
 import { Department } from '../interface/department';
@@ -29,6 +29,8 @@ export class ProductComponent implements OnInit {
     departments: [[], [Validators.required]],
   });
 
+  @ViewChild('form') form: NgForm;
+
   products: Product[] = [];
   departments: Department[] = [];
 
@@ -54,6 +56,8 @@ export class ProductComponent implements OnInit {
     } else {
       this.productsService.add(data).subscribe();
     }
+
+    this.resetForm();
   }
 
   delete(prod: Product) {
@@ -71,6 +75,11 @@ export class ProductComponent implements OnInit {
 
   notify(msg: string) {
     this.snackbar.open(msg, 'OK', { duration: 3000 });
+  }
+
+  resetForm() {
+    // this.productForm.reset();
+    this.form.resetForm()
   }
 
   ngOnDestroy() {

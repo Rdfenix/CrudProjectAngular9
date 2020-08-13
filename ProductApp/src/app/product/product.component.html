@@ -1,7 +1,7 @@
 <mat-card fxFlex>
   <mat-card-title>Departments Form</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="productForm" (ngSubmit)="save()" fxLayout="column" fxLayoutAlign="space-between">
+    <form [formGroup]="productForm" (ngSubmit)="save()" fxLayout="column" fxLayoutAlign="space-between" #form='ngForm'>
       <input type="hidden" formControlName="_id" />
       <mat-form-field>
         <input matInput placeholder="Product Name" formControlName="name" />

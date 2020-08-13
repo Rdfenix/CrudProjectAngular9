@@ -65,7 +65,9 @@ export class DepartmentComponent implements OnInit {
     this.onEdit = null;
   }
 
-  cancel() {}
+  cancel() {
+    this.clearField();
+  }
 
   edit(dep: Department) {
     this.depName = dep.name;

@@ -3,9 +3,13 @@ const router = express.Router();
 const Product = require("./product");
 
 router.post("/", (req, res) => {
-  const { name, price, stock, departments } = req.body;
-  const product = new Product({ name, price, stock, departments });
-  product.save((err, prod) => {
+  let p = new Product({
+    name: req.body.name,
+    price: req.body.price,
+    stock: req.body.stock,
+    departments: req.body.departments,
+  });
+  p.save((err, prod) => {
     if (err) res.status(500).send(err);
     else res.status(200).send(prod);
   });
@@ -19,26 +23,21 @@ router.get("/", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  Product.deleteOne({ _id: id }, (err) => {
+  Product.deleteOne({ _id: req.params.id }, (err) => {
     if (err) res.status(500).send(err);
     else res.status(200).send({});
   });
 });
 
 router.patch("/:id", (req, res) => {
-  const { id } = req.params;
-  const { name, price, stock, departments } = req.body;
-  Product.findById(id, (err, prod) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (!pro) {
-      res.status(404).send({});
-    } else {
-      prod.name = name;
-      prod.price = price;
-      prod.stock = stock;
-      prod.departments = departments;
+  Product.findById(req.params.id, (err, prod) => {
+    if (err) res.status(500).send(err);
+    else if (!prod) res.status(404).send({});
+    else {
+      prod.name = req.body.name;
+      prod.price = req.body.price;
+      prod.stock = req.body.stock;
+      prod.departments = req.body.departments;
       prod.save((err, prod) => {
         if (err) res.status(500).send(err);
         else res.status(200).send(prod);
@@ -46,5 +45,4 @@ router.patch("/:id", (req, res) => {
     }
   });
 });
-
 module.exports = router;

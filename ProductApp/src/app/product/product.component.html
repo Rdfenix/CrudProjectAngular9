@@ -23,9 +23,9 @@
                 : ""
             }}
             <span *ngIf="productForm.value.departments?.length > 1" class="additional-selection">
-              (+{{ productForm.value.departments.length - 1 }}
+              (+{{ productForm.value.departments?.length - 1 }}
               {{
-                productForm.value.departments.length === 2 ? "other" : "others"
+                productForm.value.departments?.length === 2 ? "other" : "others"
               }})
             </span>
           </mat-select-trigger>

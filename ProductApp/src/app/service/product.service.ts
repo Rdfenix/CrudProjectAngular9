@@ -25,11 +25,11 @@ export class ProductService {
   get(): Observable<Product[]> {
     if (!this.loaded) {
       combineLatest(
-        this.http.get<Product[]>(this.url),
-        this.departmentService.get()
+        this.departmentService.get(),
+        this.http.get<Product[]>(this.url)
       )
         .pipe(
-          map(([products, departments]) => {
+          map(([departments, products]) => {
             for (let prod of products) {
               let ids = prod.departments as string[];
               prod.departments = ids.map((id) =>

@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   ambient: 'dev',
-  url: "http://localhost:3000"
+  url: 'http://18.231.146.109:3000'
 };
 
 /*

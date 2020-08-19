@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Department } from '../interface/department';
+import { Department, ResponseDepartment } from '../interface/department';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,11 @@ export class DepartmentService {
 
   get(): Observable<Department[]> {
     if (!this.loaded) {
-      this.http.get<Department[]>(this.url).subscribe(this.departmenteSubject$);
+      this.http
+        .get<ResponseDepartment>(this.url)
+        .subscribe((response: ResponseDepartment) => {
+          this.departmenteSubject$.next(response.Department);
+        });
       this.loaded = true;
     }
     return this.departmenteSubject$.asObservable();

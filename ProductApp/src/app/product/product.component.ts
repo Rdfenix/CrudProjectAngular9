@@ -31,7 +31,7 @@ export class ProductComponent implements OnInit {
 
   @ViewChild('form') form: NgForm;
 
-  products: Product[] = [];
+  products: any = [];
   departments: Department[] = [];
 
   private unsubscribe$: Subject<any> = new Subject<any>();
@@ -40,17 +40,22 @@ export class ProductComponent implements OnInit {
     this.departmentService
       .get()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((deps) => (this.departments = deps));
+      .subscribe((deps) => {
+        console.log('deps', deps);
+        this.departments = deps;
+      });
     this.productsService
       .get()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((prods) => {
+        console.log('prods', prods);
         this.products = prods;
       });
   }
 
   save() {
     let data = this.productForm.value;
+    console.log(data);
     if (data._id) {
       this.productsService.update(data).subscribe();
     } else {
@@ -79,7 +84,7 @@ export class ProductComponent implements OnInit {
 
   resetForm() {
     // this.productForm.reset();
-    this.form.resetForm()
+    this.form.resetForm();
   }
 
   ngOnDestroy() {

@@ -3,15 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product, ProductData } from '../interface/product';
-import { Department } from '../interface/department';
 import { DepartmentService } from './department.service';
-import { filter, map, mergeMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  readonly url = `${environment.url}/products`;
+  readonly url = `${environment.url}/product`;
   private productsSubject$: BehaviorSubject<Product[]> = new BehaviorSubject<
     Product[]
   >(null);
@@ -34,33 +33,30 @@ export class ProductService {
   }
 
   add(prod: Product): Observable<Product> {
-    console.log(prod);
+    prod.departments = prod.departments.map((item) => {
+      delete item._id;
+      delete item.__v;
+      return item;
+    });
 
     return this.http
-      .post<Product>(this.url, { prod })
-      .pipe(
-        tap((prod) =>
-          this.productsSubject$.getValue().push({ ...prod, _id: prod._id })
-        )
-      );
+      .post<Product>(this.url, prod)
+      .pipe(tap((prod) => this.productsSubject$.getValue().push(prod)));
   }
 
   update(prod: Product): Observable<Product> {
-    return this.http
-      .put<Product>(`${this.url}/${prod._id}`, { prod })
-      .pipe(
-        tap(() =>
-          this.productsSubject$
-            .getValue()
-            .filter((item) => item._id === prod._id)
-            .map((item) => (item = prod))
-        )
-      );
+    return this.http.patch<Product>(`${this.url}/${prod._id}`, prod).pipe(
+      tap(() => {
+        let products = this.productsSubject$.getValue();
+        let index = products.findIndex((p) => p._id === prod._id);
+        if (index >= 0) products[index] = prod;
+      })
+    );
   }
 
   delete(prod: Product): Observable<any> {
     return this.http.delete(`${this.url}/${prod._id}`).pipe(
-      tap(() => {
+      tap((resp) => {
         let products = this.productsSubject$.getValue();
         const index = products.findIndex((p) => p._id === prod._id);
         if (index >= 0) products.splice(index, 1);

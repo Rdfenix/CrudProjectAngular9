@@ -9,7 +9,7 @@ import { Department, ResponseDepartment } from '../interface/department';
   providedIn: 'root',
 })
 export class DepartmentService {
-  readonly url = `${environment.url}/departments`;
+  readonly url = `${environment.url}/department`;
   private departmenteSubject$: BehaviorSubject<
     Department[]
   > = new BehaviorSubject<Department[]>(null);
@@ -54,7 +54,7 @@ export class DepartmentService {
 
   update(dep: Department): Observable<Department> {
     return this.http.patch<Department>(`${this.url}/${dep._id}`, dep).pipe(
-      tap((dep) => {
+      tap(() => {
         let departments = this.departmenteSubject$.getValue();
         let index = departments.findIndex(
           (department) => department._id === dep._id
